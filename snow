@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# spotify-now: info on the current spotify song
+# https://github.com/getmicah/spotify-now.git
+#
+# Created by Micah Cowell
+# https://github.com/getmicah
+
+songInfo () {
+    # get dbus status of spotify player
+    meta=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
+
+    # determine row in meta list
+    row="1"
+    if [ "$1" = "artist" ] || [ "$1" = "albumArtist" ]
+    then
+        row="2"
+    fi
+
+    # echo the final result
+    echo $(echo "$meta" | grep -m 1 "xesam:$1" -b$row | tail -n 1 | cut -d'"' -f2)
+}
+
+# check for valid arguments
+if [ "$1" = "album" ] || [ "$1" = "albumArtist" ] || [ "$1" = "artist" ] || [ "$1" = "autoRating" ] || [ "$1" = "discNumber" ] || [ "$1" = "title" ] || [ "$1" = "trackNumber" ] || [ "$1" = "url" ]
+then
+    echo "$(songInfo $1)"
+else
+    echo "Invalid Argument: $1"
+fi
