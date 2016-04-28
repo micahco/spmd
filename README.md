@@ -3,7 +3,7 @@ A bash script that gives you information on the current Spotify song.
 
 ## Usage
 
-Valid Keywords:
+Valid keywords:
 
 * %album
 * %artist
@@ -20,13 +20,8 @@ Kendrick Lamar - Alright
 ```
 
 ```
-$ spotify-now Album: %album
+$ spotify-now -m "your custom message" Album: %album
 Album: To Pimp A Butterfly
-```
-
-```
-$ spotify-now -m "your custom message" Listening to %title by %artist
-Listening to Alright by Kendrick Lamar
 ```
 
 And if Spotify is closed:
