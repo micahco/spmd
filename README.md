@@ -1,6 +1,8 @@
 # Spotify-Now
 A bash script that gives you information on the current Spotify song.
 
+![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
+
 ## Usage
 
 Valid keywords:
@@ -30,10 +32,6 @@ And if Spotify is closed:
 $ spotify-now -m "stopped" %title
 stopped
 ```
-
-scrot:
-
-![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
 
 ## How Does it Work
 This works by send a dbus message to the Spotify player which then returns information on the song currently playing. This data is then parsed using a combination of grep, tail, and cut commands.
