@@ -8,11 +8,18 @@ Valid song info:
 * %artist
 * %track
 
+If you want a custom message when Spotify isn't running:
+`-m "your custom message"`
+
 Example:
 
-```$ spotify-now %artist - %title
-
+```$ spotify-now -m "- stopped -" %artist - %title
+   David Bowie - Heroes
 ```
+
+And if Spotify is closed:
+
+`- stopped -`
 
 # How?
 This works by send a dbus message to the Spotify player which then returns information on the song currently playing. This data is then parsed and echoed.
