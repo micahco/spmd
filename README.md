@@ -31,6 +31,8 @@ $ spotify-now -m "stopped" %title
 stopped
 ```
 
+scrot:
+
 ![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
 
 ## How Does it Work
