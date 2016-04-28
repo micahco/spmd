@@ -38,7 +38,7 @@ then
     then
         echo "${2}"
     else
-        echo "Error: Spotify doesn't seem to be running..."
+        echo "Spotify doesn't seem to be running."
     fi
     exit 0
 else

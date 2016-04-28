@@ -14,19 +14,19 @@ If you want a custom message when Spotify isn't running:
 ##### Example:
 
 ```
-$ spotify-now %title by %artist from %album
-Common - The Light
+$ spotify-now -m "stopped" %title by %artist from %album
+Kendrick Lamar - Alright
 ```
 
 ```
-$ spotify-now -m "- stopped -" Album: %album
-Album: Madvilliany
+$ spotify-now -m "stopped" Album: %album
+Album: To Pimp A Butterfly
 ```
 
 And if Spotify is closed:
 
 ```
-$ spotify-now -m "- stopped -" album: %album
+$ spotify-now -m "stopped" album: %album
 - stopped -
 ```
 
