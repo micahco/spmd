@@ -8,7 +8,7 @@ getAlbum () {
     echo "$album"
 }
 getArtist () {
-    artist=$(echo "$MSG" | grep -m 1 "xesam:artist" -b2 | tail -n1 | cut -d'"' -f2)
+    artist=$(echo "$MSG" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1 | cut -d'"' -f2)
     echo "$artist"
 }
 getTitle () {
