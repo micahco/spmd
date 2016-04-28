@@ -31,5 +31,7 @@ $ spotify-now -m "stopped" %title
 stopped
 ```
 
+![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
+
 ## How?
 This works by send a dbus message to the Spotify player which then returns information on the song currently playing. This data is then parsed and echoed.
