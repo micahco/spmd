@@ -2,15 +2,15 @@
 A bash script that gives you information on the current Spotify song.
 
 # Usage
-Information args:
+Valid song info:
 
 * %album
 * %artist
 * %track
 
+Example:
 
-
-```$ spotify-now %
+```$ spotify-now %artist - %title
 
 ```
 

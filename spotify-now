@@ -3,42 +3,70 @@
 # https://github.com/getmicah/spotify-now
 
 
-# get mpris2 dbus status of spotify player
-META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-
 getAlbum () {
-    echo $(echo "$META" | grep -m 1 "xesam:album" -b1 | tail -n1 | cut -d'"' -f2)
+    album=$(echo "$MSG" | grep -m 1 "xesam:album" -b1 | tail -n1 | cut -d'"' -f2)
+    echo "$album"
 }
-
 getArtist () {
-    echo $(echo "$META" | grep -m 1 "xesam:artist" -b2 | tail -n1 | cut -d'"' -f2)
+    artist=$(echo "$MSG" | grep -m 1 "xesam:artist" -b2 | tail -n1 | cut -d'"' -f2)
+    echo "$artist"
 }
-
 getTitle () {
-    echo $(echo "$META" | grep -m 1 "xesam:title" -b1 | tail -n1 | cut -d'"' -f2)
+    title=$(echo "$MSG" | grep -m 1 "xesam:title" -b1 | tail -n1 | cut -d'"' -f2)
+    echo "$title"
 }
 
 
-INFO=""
-if [[ $# -eq 0 ]] ; then
+
+# PARAMETERS
+MSG=""
+RES=""
+
+# check if spotify is running
+if test `pidof spotify | wc -l` != 1
+then
+    if test "${1}" == "-m"
+    then
+        echo "${2}"
+    else
+        echo "Error: Spotify doesn't seem to be running..."
+    fi
+    exit 0
+else
+    # get mpris2 dbus status of spotify player
+    MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
+fi
+
+# check if no args
+if [[ $# -eq 0 ]];
+then
     echo "Hello, this is spotify-now:"
     echo "https://github.com/getmicah/spotify-now"
     exit 0
 fi
-for arg in "$@"
+
+# print each arg with info
+start=1
+end=$#
+if test"${1}" == "-m"
+then
+    start=3
+fi
+for i in `seq $start $end`;
 do
-    case "$arg" in
-       %album) INFO="$INFO $(getAlbum)"
+    case "${!i}" in
+       %album) RES="$RES $(getAlbum)"
        ;;
-       %artist) INFO="$INFO $(getArtist)"
+       %artist) RES="$RES $(getArtist)"
        ;;
-       %title) INFO="$INFO $(getTitle)"
+       %title) RES="$RES $(getTitle)"
        ;;
-       *) INFO="$INFO $arg"
-       ;;
-       *) INFO="$INFO $arg"
+       *) RES="$RES ${!i}"
        ;;
     esac
 done
 
-echo $INFO
+
+
+# LIFTOFF
+echo $RES
