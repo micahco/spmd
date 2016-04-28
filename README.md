@@ -11,10 +11,11 @@ Valid song info:
 If you want a custom message when Spotify isn't running:
 `-m "your custom message"`
 
-Example:
+# Example
 
-```$ spotify-now -m "- stopped -" %artist - %title
-   David Bowie - Heroes
+```
+$ spotify-now -m "- stopped -" %artist - %title
+David Bowie - Heroes
 ```
 
 And if Spotify is closed:
