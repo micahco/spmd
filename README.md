@@ -2,7 +2,8 @@
 A bash script that gives you information on the current Spotify song.
 
 ## Usage
-Valid song info:
+
+Valid Keywords:
 
 * %album
 * %artist
@@ -14,20 +15,25 @@ If you want a custom message when Spotify isn't running:
 ##### Example:
 
 ```
-$ spotify-now -m "stopped" %title by %artist from %album
+$ spotify-now %artist - %title
 Kendrick Lamar - Alright
 ```
 
 ```
-$ spotify-now -m "stopped" Album: %album
+$ spotify-now Album: %album
 Album: To Pimp A Butterfly
+```
+
+```
+$ spotify-now -m "your custom message" Listening to %title by %artist
+Listening to Alright by Kendrick Lamar
 ```
 
 And if Spotify is closed:
 
 ```
-$ spotify-now -m "stopped" album: %album
-- stopped -
+$ spotify-now -m "stopped" %title
+stopped
 ```
 
 ## How?
