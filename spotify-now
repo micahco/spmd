@@ -18,13 +18,22 @@ getTitle () {
 
 
 
-# PARAMETERS
+# globals
 MSG=""
 RES=""
+
+# check if no args
+if [[ $# -eq 0 ]];
+then
+    echo "Hello, this is spotify-now:"
+    echo "https://github.com/getmicah/spotify-now"
+    exit 0
+fi
 
 # check if spotify is running
 if test `pidof spotify | wc -l` != 1
 then
+    # custom stop status
     if test "${1}" == "-m"
     then
         echo "${2}"
@@ -37,18 +46,10 @@ else
     MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
 fi
 
-# check if no args
-if [[ $# -eq 0 ]];
-then
-    echo "Hello, this is spotify-now:"
-    echo "https://github.com/getmicah/spotify-now"
-    exit 0
-fi
-
 # print each arg with info
 start=1
 end=$#
-if test"${1}" == "-m"
+if test "${1}" == "-m"
 then
     start=3
 fi
@@ -65,7 +66,6 @@ do
        ;;
     esac
 done
-
 
 
 # LIFTOFF
