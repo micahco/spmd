@@ -1,16 +1,19 @@
 # Spotify-Now
+
 A bash script that gives you information on the current Spotify song.
 
 ![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
 
 
 ## Installation
+Simply copy the source script to your bash path.
 
-#### Arch
-Install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) from the aur.
+1. `git clone https://github.com/getmicah/spotify-now.git`
+2. `cd spotify-now`
+3. `sudo cp spotify-now /usr/bin`
+4. `sudo chmod +x /usr/bin/spotify-now`
 
-#### Others
-Just copy the source into /usr/bin or some other directory in your bash/zsh/whatever path.
+Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) it from the aur if they want to.
 
 
 ## Usage
