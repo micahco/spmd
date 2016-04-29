@@ -12,7 +12,7 @@ Simply copy the source script to your bash path.
 2. `cd spotify-now`
 3. `sudo cp spotify-now /usr/bin`
 
-Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) it from the aur if they want to.
+Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) it from the aur if that's too much work.
 
 
 ## Usage
@@ -26,7 +26,7 @@ Valid keywords:
 If you want a custom message when Spotify isn't running:
 `-m "your custom message"`
 
-#### Example:
+**Example:**
 
 ```
 $ spotify-now %artist - %title
