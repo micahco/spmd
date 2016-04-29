@@ -11,7 +11,6 @@ Simply copy the source script to your bash path.
 1. `git clone https://github.com/getmicah/spotify-now.git`
 2. `cd spotify-now`
 3. `sudo cp spotify-now /usr/bin`
-4. `sudo chmod +x /usr/bin/spotify-now`
 
 Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) it from the aur if they want to.
 
