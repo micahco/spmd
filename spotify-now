@@ -2,7 +2,7 @@
 #
 # https://github.com/getmicah/spotify-now
 
-
+# get track info
 getAlbum () {
     album=$(echo "$MSG" | grep -m 1 "xesam:album" -b1 | tail -n1 | cut -d'"' -f2)
     echo "$album"
@@ -16,57 +16,44 @@ getTitle () {
     echo "$title"
 }
 
-
-
-# globals
-MSG=""
-RES=""
-
 # check if no args
-if [[ $# -eq 0 ]];
-then
-    echo "Hello, this is spotify-now:"
-    echo "https://github.com/getmicah/spotify-now"
+if [[ "$#" -eq 0 ]]; then
+    echo "Hello, this is spotify-now"
+    echo "Help: 'spotify-now -h'"
+    echo "Info: https://github.com/getmicah/spotify-now"
+    exit 0
+elif [[ "${1}" == "-h" ]]; then
+    echo -e "\nUsage: spotify-now -i \"<info>\" -e \"<error>\""
+    echo -e "\n\"<info>\" can contain the following keywords:"
+    echo -e "\t%album, %artist, %title"
+    echo -e "\n\"<error>\" is a custom spotify closed message."
+    echo -e "\nhttps://github.com/getmicah/spotify-now\n"
+    exit 0
+elif [[ "$#" != 4 ]]; then
+    echo "Error: invalid arguments"
+    echo "Help: 'spotify-now -h'"
+    exit 0
+elif [[ "${1}" != "-i" ]]; then
+    echo "Error: invalid arguments"
+    echo "Help: 'spotify-now -h'"
+    exit 0
+elif [[ "${3}" != "-e" ]]; then
+    echo "Error: invalid arguments"
+    echo "Help: 'spotify-now -h'"
     exit 0
 fi
 
 # check if spotify is running
-if test `pidof spotify | wc -l` != 1
-then
-    # custom stop status
-    if test "${1}" == "-m"
-    then
-        echo "${2}"
-    else
-        echo "Spotify doesn't seem to be running."
-    fi
+status=`pidof spotify | wc -l`
+if [[ $status != 1 ]]; then
+    echo "${4}"
     exit 0
 else
     # get mpris2 dbus status of spotify player
     MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
+    RES="${2}"
+    RES="${RES/"%album"/$(getAlbum)}"
+    RES="${RES/"%artist"/$(getArtist)}"
+    RES="${RES/"%title"/$(getTitle)}"
+    echo $RES
 fi
-
-# print each arg with info
-start=1
-end=$#
-if test "${1}" == "-m"
-then
-    start=3
-fi
-for i in `seq $start $end`;
-do
-    case "${!i}" in
-       %album) RES="$RES $(getAlbum)"
-       ;;
-       %artist) RES="$RES $(getArtist)"
-       ;;
-       %title) RES="$RES $(getTitle)"
-       ;;
-       *) RES="$RES ${!i}"
-       ;;
-    esac
-done
-
-
-# LIFTOFF
-echo $RES
