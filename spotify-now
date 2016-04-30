@@ -13,7 +13,11 @@ artist () {
     res=$(echo "$MSG" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
-    echo "$res"
+    if [[ "$res" == ""]]; then
+        echo "Ad"
+    else
+        echo "$res"
+    fi
 }
 disc () {
     res=$(echo "$MSG" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
