@@ -26,7 +26,7 @@ elif [[ "${1}" == "-h" ]]; then
     echo -e "\nUsage: spotify-now -i \"<info>\" -e \"<error>\""
     echo -e "\n\"<info>\" can contain the following keywords:"
     echo -e "\t%album, %artist, %title"
-    echo -e "\n\"<error>\" is a custom spotify closed message."
+    echo -e "\n\"<error>\" your custom Spotify closed message."
     echo -e "\nhttps://github.com/getmicah/spotify-now\n"
     exit 0
 elif [[ "$#" != 4 ]]; then
