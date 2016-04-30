@@ -3,17 +3,35 @@
 # https://github.com/getmicah/spotify-now
 
 # get track info
-getAlbum () {
-    album=$(echo "$MSG" | grep -m 1 "xesam:album" -b1 | tail -n1 | cut -d'"' -f2)
-    echo "$album"
+album () {
+    res=$(echo "$MSG" | grep -m 1 "xesam:album" -b1 | tail -n1)
+    res="${res%\"*}"
+    res="${res#*\"}"
+    echo "$res"
 }
-getArtist () {
-    artist=$(echo "$MSG" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1 | cut -d'"' -f2)
-    echo "$artist"
+artist () {
+    res=$(echo "$MSG" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1)
+    res="${res%\"*}"
+    res="${res#*\"}"
+    echo "$res"
 }
-getTitle () {
-    title=$(echo "$MSG" | grep -m 1 "xesam:title" -b1 | tail -n1 | cut -d'"' -f2)
-    echo "$title"
+disc () {
+    res=$(echo "$MSG" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
+    res="${res#*3}"
+    res="${res#*2}"
+    echo "$res"
+}
+title () {
+    res=$(echo "$MSG" | grep -m 1 "xesam:title" -b1 | tail -n1)
+    res="${res%\"*}"
+    res="${res#*\"}"
+    echo "$res"
+}
+track () {
+    res=$(echo "$MSG" | grep -m 1 "xesam:trackNumber" -b1 | tail -n1)
+    res="${res#*3}"
+    res="${res#*2}"
+    echo "$res"
 }
 
 # check if no args
@@ -25,7 +43,7 @@ if [[ "$#" -eq 0 ]]; then
 elif [[ "${1}" == "-h" ]]; then
     echo -e "\nUsage: spotify-now -i \"<info>\" -e \"<error>\""
     echo -e "\n\"<info>\" can contain the following keywords:"
-    echo -e "\t%album, %artist, %title"
+    echo -e "\t%album, %artist, %disc, %title, %track"
     echo -e "\n\"<error>\" your custom Spotify closed message."
     echo -e "\nhttps://github.com/getmicah/spotify-now\n"
     exit 0
@@ -51,9 +69,11 @@ if [[ $status != 1 ]]; then
 else
     # get mpris2 dbus status of spotify player
     MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-    RES="${2}"
-    RES="${RES/"%album"/$(getAlbum)}"
-    RES="${RES/"%artist"/$(getArtist)}"
-    RES="${RES/"%title"/$(getTitle)}"
-    echo $RES
+    INFO="${2}"
+    INFO="${INFO/"%album"/$(album)}"
+    INFO="${INFO/"%artist"/$(artist)}"
+    INFO="${INFO/"%disc"/$(disc)}"
+    INFO="${INFO/"%title"/$(title)}"
+    INFO="${INFO/"%track"/$(track)}"
+    echo $INFO
 fi

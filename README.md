@@ -12,7 +12,7 @@ Simply copy the source script to your bash path.
 2. `cd spotify-now`
 3. `sudo cp spotify-now /usr/bin`
 
-Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) from the aur.
+Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) from the AUR.
 
 
 ## Usage
@@ -23,7 +23,9 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 
 * %album
 * %artist
+* %disc
 * %title
+* %track
 
 `"<error>"` is your custom message when Spotify is closed.
 
@@ -42,7 +44,7 @@ Album: To Pimp A Butterfly
 And if Spotify is closed:
 
 ```
-$ spotify-now -i "%title by %artist" -e "Spotify is closed"
+$ spotify-now -i "%title by %track" -e "Spotify is closed"
 Spotify is closed
 ```
 
