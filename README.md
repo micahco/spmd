@@ -19,13 +19,13 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 
 `spotify-now -i "<info>" -e "<error>"`
 
-"<info>" can contain the following keywords:
+`"<info>"` can contain the following keywords:
 
 * %album
 * %artist
 * %title
 
-"<error" is your custom message when Spotify is closed.
+`"<error>"` is your custom message when Spotify is closed.
 
 **Example:**
 
