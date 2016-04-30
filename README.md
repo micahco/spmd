@@ -12,7 +12,7 @@ Simply copy the source script to your bash path.
 2. `cd spotify-now`
 3. `sudo cp spotify-now /usr/bin`
 
-Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) it from the aur.
+Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) from the aur.
 
 
 ## Usage
