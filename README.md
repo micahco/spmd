@@ -17,32 +17,33 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 
 ## Usage
 
-Valid keywords:
+`spotify-now -i "<info>" -e "<error>"`
+
+"<info>" can contain the following keywords:
 
 * %album
 * %artist
-* %track
+* %title
 
-If you want a custom message when Spotify isn't running:
-`-m "your custom message"`
+"<error" is your custom message when Spotify is closed.
 
 **Example:**
 
 ```
-$ spotify-now %artist - %title
+$ spotify-now -i "%artist - %title" -e "- stopped -"
 Kendrick Lamar - Alright
 ```
 
 ```
-$ spotify-now -m "your custom message" Album: %album
+$ spotify-now -i "Album: %album" -e "- stopped -"
 Album: To Pimp A Butterfly
 ```
 
 And if Spotify is closed:
 
 ```
-$ spotify-now -m "stopped" %title
-stopped
+$ spotify-now -i "%title by %artist" -e "Spotify is closed"
+Spotify is closed
 ```
 
 
