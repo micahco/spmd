@@ -2,18 +2,18 @@
 #
 # https://github.com/getmicah/spotify-now
 
-# get track info
 album () {
     res=$(echo "$MSG" | grep -m 1 "xesam:album" -b1 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
-    echo "$res"
+    echo "$res"/
 }
 artist () {
     res=$(echo "$MSG" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
-    if [[ "$res" == ""]]; then
+    # if advertisement is playing
+    if [[ "$res" == "" ]]; then
         echo "Ad"
     else
         echo "$res"
@@ -38,7 +38,7 @@ track () {
     echo "$res"
 }
 
-# check if no args
+# parse args
 if [[ "$#" -eq 0 ]]; then
     echo "Hello, this is spotify-now"
     echo "Help: 'spotify-now -h'"
@@ -74,10 +74,10 @@ else
     # get mpris2 dbus status of spotify player
     MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
     INFO="${2}"
-    INFO="${INFO/"%album"/$(album)}"
-    INFO="${INFO/"%artist"/$(artist)}"
-    INFO="${INFO/"%disc"/$(disc)}"
-    INFO="${INFO/"%title"/$(title)}"
-    INFO="${INFO/"%track"/$(track)}"
+    INFO="${INFO//"%album"/$(album)}"
+    INFO="${INFO//"%artist"/$(artist)}"
+    INFO="${INFO//"%disc"/$(disc)}"
+    INFO="${INFO//"%title"/$(title)}"
+    INFO="${INFO//"%track"/$(track)}"
     echo $INFO
 fi
