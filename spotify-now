@@ -41,7 +41,6 @@ track () {
 
 # error message
 errorMsg () {
-    echo "Hello, this is spotify-now"
     echo "Help: 'spotify-now -h'"
     echo "Info: https://github.com/getmicah/spotify-now"
     exit 0
@@ -61,8 +60,7 @@ helpMsg () {
 
 # check for errors
 if [[ "$#" -eq 0 ]]; then
-    errorMsg
-elif [[ "$#" < 2 ]]; then
+    echo -e "Hello, this is spotify-now\n"
     errorMsg
 elif [[ "$#" < 2 ]]; then
     errorMsg
