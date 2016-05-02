@@ -110,7 +110,6 @@ fi
 
 # check if spotify is running
 status=`pidof spotify | wc -l`
-playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
 if [[ $status != 1 ]]; then
     if [[ "$ERROR" == "" ]]; then
         # default error message
@@ -119,21 +118,24 @@ if [[ $status != 1 ]]; then
         echo "$ERROR"
     fi
     exit 0
-elif [[ $playback == "Paused" ]]; then
-    if [[ "$PAUSED" == "" ]]; then
-        # default paused message
-        echo ""
-    else
-        echo "$PAUSED"
-    fi
-    exit 0
-elif [[ "${1}" == "-i" || "${3}" == "-i" || "${5}" == "-i" ]]; then
-    # get mpris2 dbus status of spotify player
-    META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-    INFO="${INFO//"%album"/$(album)}"
-    INFO="${INFO//"%artist"/$(artist)}"
-    INFO="${INFO//"%disc"/$(disc)}"
-    INFO="${INFO//"%title"/$(title)}"
-    INFO="${INFO//"%track"/$(track)}"
-    echo $INFO
+else
+	playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
+	if [[ $playback == "Paused" ]]; then
+		if [[ "$PAUSED" == "" ]]; then
+			# default paused message
+			echo ""
+		else
+			echo "$PAUSED"
+		fi
+		exit 0
+	elif [[ "${1}" == "-i" || "${3}" == "-i" || "${5}" == "-i" ]]; then
+   		# get mpris2 dbus status of spotify player
+   		META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
+   		INFO="${INFO//"%album"/$(album)}"
+   		INFO="${INFO//"%artist"/$(artist)}"
+   		INFO="${INFO//"%disc"/$(disc)}"
+   		INFO="${INFO//"%title"/$(title)}"
+   		INFO="${INFO//"%track"/$(track)}"
+   		echo $INFO
+	fi
 fi
