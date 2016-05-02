@@ -2,14 +2,15 @@
 #
 # https://github.com/getmicah/spotify-now
 
+# track info
 album () {
-    res=$(echo "$MSG" | grep -m 1 "xesam:album" -b1 | tail -n1)
+    res=$(echo "$META" | grep -m 1 "xesam:album" -b1 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
-    echo "$res"/
+    echo "$res"
 }
 artist () {
-    res=$(echo "$MSG" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1)
+    res=$(echo "$META" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
     # if advertisement is playing
@@ -20,63 +21,115 @@ artist () {
     fi
 }
 disc () {
-    res=$(echo "$MSG" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
+    res=$(echo "$META" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
     res="${res#*3}"
     res="${res#*2}"
     echo "$res"
 }
 title () {
-    res=$(echo "$MSG" | grep -m 1 "xesam:title" -b1 | tail -n1)
+    res=$(echo "$META" | grep -m 1 "xesam:title" -b1 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
     echo "$res"
 }
 track () {
-    res=$(echo "$MSG" | grep -m 1 "xesam:trackNumber" -b1 | tail -n1)
+    res=$(echo "$META" | grep -m 1 "xesam:trackNumber" -b1 | tail -n1)
     res="${res#*3}"
     res="${res#*2}"
     echo "$res"
 }
 
-# parse args
-errorMsg="${4}"
-pausedMsg="${6}"
-if [[ "$#" -eq 0 ]]; then
+
+# error message
+errorMsg () {
     echo "Hello, this is spotify-now"
     echo "Help: 'spotify-now -h'"
     echo "Info: https://github.com/getmicah/spotify-now"
     exit 0
-elif [[ "${1}" == "-h" ]]; then
+}
+
+# help message
+helpMsg () {
     echo -e "\nUsage: spotify-now -i \"<info>\" -e \"<error>\" -p \"<paused>\""
     echo -e "\n\"<info>\" can contain the following keywords:"
     echo -e "\t%album, %artist, %disc, %title, %track"
     echo -e "\n\"<error>\" your custom Spotify closed message."
-	echo -e "\n\"<paused>\" your custom Spotify paused message."
+    echo -e "\n\"<paused>\" your custom Spotify paused message."
     echo -e "\nhttps://github.com/getmicah/spotify-now\n"
     exit 0
+}
+
+
+# check for errors
+if [[ "$#" -eq 0 ]]; then
+    errorMsg
 elif [[ "$#" < 2 ]]; then
-    echo "Error: invalid arguments"
-    echo "Help: 'spotify-now -h'"
-    exit 0
-elif [[ "${1}" != "-i" ]]; then
-    echo "Error: invalid arguments"
-    echo "Help: 'spotify-now -h'"
-    exit 0
+    errorMsg
+elif [[ "$#" < 2 ]]; then
+    errorMsg
+elif [[ "$#" == 2 ]]; then
+    if [[ "${1}" == "-h" ]]; then
+        helpMsg
+    elif [[ "${1}" != "-i" && "${1}" != "-p" && "${1}" != "-e" ]]; then
+        errorMsg
+    fi
+elif [[ "$#" == 4 ]]; then
+    if [[ "${3}" != "-i" && "${3}" != "-p" && "${3}" != "-e" ]]; then
+        errorMsg
+    fi
+elif [[ "$#" == 6 ]]; then
+    if [[ "${5}" != "-i" && "${5}" != "-p" && "${5}" != "-e" ]]; then
+        errorMsg
+    fi
 fi
+
+
+# identify parameters
+INFO=""
+PAUSED=""
+ERROR=""
+
+if [[ "${1}" == "-i" ]]; then
+    INFO="${2}"
+elif [[ "${1}" == "-p" ]]; then
+    PAUSED="${2}"
+elif [[ "${1}" == "-e" ]]; then
+    ERROR="${2}"
+fi
+
+if [[ "${3}" == "-i" ]]; then
+    INFO="${4}"
+elif [[ "${3}" == "-p" ]]; then
+    PAUSED="${4}"
+elif [[ "${3}" == "-e" ]]; then
+    ERROR="${4}"
+fi
+
+if [[ "${5}" == "-i" ]]; then
+    INFO="${6}"
+elif [[ "${5}" == "-p" ]]; then
+    PAUSED="${6}"
+elif [[ "${5}" == "-e" ]]; then
+    ERROR="${6}"
+fi
+
 
 # check if spotify is running
 status=`pidof spotify | wc -l`
-playbackStatus=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
+playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
 if [[ $status != 1 ]]; then
-    echo "$errorMsg"
+    if [[ "$ERROR" == "" ]]; then
+        echo ""
+    else
+        echo "$ERROR"
+    fi
     exit 0
-elif [[ $playbackStatus == "Paused" ]]; then
-	echo "$pausedMsg"
-	exit 0
-else
+elif [[ $playback == "Paused" ]]; then
+    echo "$PAUSED"
+    exit 0
+elif [[ "${1}" == "-i" || "${3}" == "-i" || "${5}" == "-i" ]]; then
     # get mpris2 dbus status of spotify player
-    MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-    INFO="${2}"
+    META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
     INFO="${INFO//"%album"/$(album)}"
     INFO="${INFO//"%artist"/$(artist)}"
     INFO="${INFO//"%disc"/$(disc)}"
