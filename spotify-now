@@ -39,19 +39,22 @@ track () {
 }
 
 # parse args
+errorMsg="${4}"
+pausedMsg="${6}"
 if [[ "$#" -eq 0 ]]; then
     echo "Hello, this is spotify-now"
     echo "Help: 'spotify-now -h'"
     echo "Info: https://github.com/getmicah/spotify-now"
     exit 0
 elif [[ "${1}" == "-h" ]]; then
-    echo -e "\nUsage: spotify-now -i \"<info>\" -e \"<error>\""
+    echo -e "\nUsage: spotify-now -i \"<info>\" -e \"<error>\" -p \"<paused>\""
     echo -e "\n\"<info>\" can contain the following keywords:"
     echo -e "\t%album, %artist, %disc, %title, %track"
     echo -e "\n\"<error>\" your custom Spotify closed message."
+	echo -e "\n\"<paused>\" your custom Spotify paused message."
     echo -e "\nhttps://github.com/getmicah/spotify-now\n"
     exit 0
-elif [[ "$#" != 4 ]]; then
+elif [[ "$#" < 2 ]]; then
     echo "Error: invalid arguments"
     echo "Help: 'spotify-now -h'"
     exit 0
@@ -59,17 +62,17 @@ elif [[ "${1}" != "-i" ]]; then
     echo "Error: invalid arguments"
     echo "Help: 'spotify-now -h'"
     exit 0
-elif [[ "${3}" != "-e" ]]; then
-    echo "Error: invalid arguments"
-    echo "Help: 'spotify-now -h'"
-    exit 0
 fi
 
 # check if spotify is running
 status=`pidof spotify | wc -l`
+playbackStatus=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
 if [[ $status != 1 ]]; then
-    echo "${4}"
+    echo "$errorMsg"
     exit 0
+elif [[ $playbackStatus == "Paused" ]]; then
+	echo "$pausedMsg"
+	exit 0
 else
     # get mpris2 dbus status of spotify player
     MSG=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
