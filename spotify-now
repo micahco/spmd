@@ -85,12 +85,15 @@ fi
 INFO=""
 PAUSED=""
 ERROR=""
+ESCAPE=false
 if [[ "${1}" == "-i" ]]; then
     INFO="${2}"
 elif [[ "${1}" == "-p" ]]; then
     PAUSED="${2}"
 elif [[ "${1}" == "-e" ]]; then
     ERROR="${2}"
+elif [[ "${1}" == "-escape" ]]; then
+	ESCAPE=true
 fi
 if [[ "${3}" == "-i" ]]; then
     INFO="${4}"
@@ -98,6 +101,8 @@ elif [[ "${3}" == "-p" ]]; then
     PAUSED="${4}"
 elif [[ "${3}" == "-e" ]]; then
     ERROR="${4}"
+elif [[ "${3}" == "-escape" ]]; then
+	ESCAPE=true
 fi
 if [[ "${5}" == "-i" ]]; then
     INFO="${6}"
@@ -105,8 +110,18 @@ elif [[ "${5}" == "-p" ]]; then
     PAUSED="${6}"
 elif [[ "${5}" == "-e" ]]; then
     ERROR="${6}"
+elif [[ "${5}" == "-escape" ]]; then
+	ESCAPE=true
 fi
-
+if [[ "${7}" == "-i" ]]; then
+    INFO="${8}"
+elif [[ "${7}" == "-p" ]]; then
+    PAUSED="${8}"
+elif [[ "${7}" == "-e" ]]; then
+    ERROR="${8}"
+elif [[ "${7}" == "-escape" ]]; then
+	ESCAPE=true
+fi
 
 # check if spotify is running
 status=`pidof spotify | wc -l`
@@ -136,6 +151,12 @@ else
    		INFO="${INFO//"%disc"/$(disc)}"
    		INFO="${INFO//"%title"/$(title)}"
    		INFO="${INFO//"%track"/$(track)}"
-   		echo $INFO
+		if [ "$ESCAPE" = true ]; then
+			INFO="${INFO//&/&amp;}"
+			INFO="${INFO//</&lt;}"
+			INFO="${INFO//\"/\\\"}"
+			INFO="${INFO//\\/\\\\}"
+		fi
+		echo $INFO
 	fi
 fi
