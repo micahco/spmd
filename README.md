@@ -19,7 +19,7 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 
 `spotify-now -i "<info>" -p "<paused>" -e "<error>"`
 
-NOTE: order of parameters does NOT matter.
+NOTE: order of parameters does not matter.
 
 `"<info>"` can contain the following keywords:
 
