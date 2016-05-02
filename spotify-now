@@ -85,12 +85,15 @@ fi
 INFO=""
 PAUSED=""
 ERROR=""
+ESCAPE=false
 if [[ "${1}" == "-i" ]]; then
     INFO="${2}"
 elif [[ "${1}" == "-p" ]]; then
     PAUSED="${2}"
 elif [[ "${1}" == "-e" ]]; then
     ERROR="${2}"
+elif [[ "${1}" == "-escape" ]]; then
+	ESCAPE=true
 fi
 if [[ "${3}" == "-i" ]]; then
     INFO="${4}"
@@ -98,6 +101,8 @@ elif [[ "${3}" == "-p" ]]; then
     PAUSED="${4}"
 elif [[ "${3}" == "-e" ]]; then
     ERROR="${4}"
+elif [[ "${3}" == "-escape" ]]; then
+	ESCAPE=true
 fi
 if [[ "${5}" == "-i" ]]; then
     INFO="${6}"
@@ -105,12 +110,21 @@ elif [[ "${5}" == "-p" ]]; then
     PAUSED="${6}"
 elif [[ "${5}" == "-e" ]]; then
     ERROR="${6}"
+elif [[ "${5}" == "-escape" ]]; then
+	ESCAPE=true
 fi
-
+if [[ "${7}" == "-i" ]]; then
+    INFO="${8}"
+elif [[ "${7}" == "-p" ]]; then
+    PAUSED="${8}"
+elif [[ "${7}" == "-e" ]]; then
+    ERROR="${8}"
+elif [[ "${7}" == "-escape" ]]; then
+	ESCAPE=true
+fi
 
 # check if spotify is running
 status=`pidof spotify | wc -l`
-playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
 if [[ $status != 1 ]]; then
     if [[ "$ERROR" == "" ]]; then
         # default error message
@@ -119,21 +133,30 @@ if [[ $status != 1 ]]; then
         echo "$ERROR"
     fi
     exit 0
-elif [[ $playback == "Paused" ]]; then
-    if [[ "$PAUSED" == "" ]]; then
-        # default paused message
-        echo ""
-    else
-        echo "$PAUSED"
-    fi
-    exit 0
-elif [[ "${1}" == "-i" || "${3}" == "-i" || "${5}" == "-i" ]]; then
-    # get mpris2 dbus status of spotify player
-    META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-    INFO="${INFO//"%album"/$(album)}"
-    INFO="${INFO//"%artist"/$(artist)}"
-    INFO="${INFO//"%disc"/$(disc)}"
-    INFO="${INFO//"%title"/$(title)}"
-    INFO="${INFO//"%track"/$(track)}"
-    echo $INFO
+else
+	playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
+	if [[ $playback == "Paused" ]]; then
+		if [[ "$PAUSED" == "" ]]; then
+			# default paused message
+			echo ""
+		else
+			echo "$PAUSED"
+		fi
+		exit 0
+	elif [[ "${1}" == "-i" || "${3}" == "-i" || "${5}" == "-i" ]]; then
+   		# get mpris2 dbus status of spotify player
+   		META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
+   		INFO="${INFO//"%album"/$(album)}"
+   		INFO="${INFO//"%artist"/$(artist)}"
+   		INFO="${INFO//"%disc"/$(disc)}"
+   		INFO="${INFO//"%title"/$(title)}"
+   		INFO="${INFO//"%track"/$(track)}"
+		if [ "$ESCAPE" = true ]; then
+			INFO="${INFO//&/&amp;}"
+			INFO="${INFO//</&lt;}"
+			INFO="${INFO//\"/\\\"}"
+			INFO="${INFO//\\/\\\\}"
+		fi
+		echo $INFO
+	fi
 fi
