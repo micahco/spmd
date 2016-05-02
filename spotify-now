@@ -39,7 +39,6 @@ track () {
     echo "$res"
 }
 
-
 # error message
 errorMsg () {
     echo "Hello, this is spotify-now"
@@ -88,7 +87,6 @@ fi
 INFO=""
 PAUSED=""
 ERROR=""
-
 if [[ "${1}" == "-i" ]]; then
     INFO="${2}"
 elif [[ "${1}" == "-p" ]]; then
@@ -96,7 +94,6 @@ elif [[ "${1}" == "-p" ]]; then
 elif [[ "${1}" == "-e" ]]; then
     ERROR="${2}"
 fi
-
 if [[ "${3}" == "-i" ]]; then
     INFO="${4}"
 elif [[ "${3}" == "-p" ]]; then
@@ -104,7 +101,6 @@ elif [[ "${3}" == "-p" ]]; then
 elif [[ "${3}" == "-e" ]]; then
     ERROR="${4}"
 fi
-
 if [[ "${5}" == "-i" ]]; then
     INFO="${6}"
 elif [[ "${5}" == "-p" ]]; then
@@ -119,13 +115,19 @@ status=`pidof spotify | wc -l`
 playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
 if [[ $status != 1 ]]; then
     if [[ "$ERROR" == "" ]]; then
+        # default error message
         echo ""
     else
         echo "$ERROR"
     fi
     exit 0
 elif [[ $playback == "Paused" ]]; then
-    echo "$PAUSED"
+    if [[ "$PAUSED" == "" ]]; then
+        # default paused message
+        echo ""
+    else
+        echo "$PAUSED"
+    fi
     exit 0
 elif [[ "${1}" == "-i" || "${3}" == "-i" || "${5}" == "-i" ]]; then
     # get mpris2 dbus status of spotify player
