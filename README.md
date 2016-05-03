@@ -27,11 +27,11 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 * %title
 * %track
 
-`"<error>"`: Custom message when Spotify is closed.
+`"<error>"` Custom message when Spotify is closed.
 
-`"<paused>"`: Custom message when Spotify is paused.
+`"<paused>"` Custom message when Spotify is paused.
 
-`--escape`: Escapes special charecters in the `"<info>"` output.
+`--escape` Escapes special charecters in the `"<info>"` output.
 
 NOTE: all the parameters are optional and order doesn't matter (--escape has to be at the end).
 
