@@ -41,6 +41,7 @@ track () {
 
 # error message
 errorMsg () {
+    echo "Error: invalid argument"
     echo "Help: 'spotify-now -h'"
     echo "Info: https://github.com/getmicah/spotify-now"
     exit 0
@@ -58,23 +59,29 @@ helpMsg () {
 }
 
 
-# check for errors
-if [[ "$#" -eq 0 ]]; then
-    echo -e "Hello, this is spotify-now\n"
-    errorMsg
-elif [[ "$#" < 2 ]]; then
-    errorMsg
-elif [[ "$#" == 2 ]]; then
-    if [[ "${1}" == "-h" ]]; then
+# check args
+if [[ "$#"  == 0 ]]; then
+    helpMsg
+elif [[ "$#" == 1 ]]; then
+    if [[ "${1}" == "-h" || "${1}" == "--help" ]]; then
         helpMsg
-    elif [[ "${1}" != "-i" && "${1}" != "-p" && "${1}" != "-e" ]]; then
+    else
         errorMsg
     fi
-elif [[ "$#" == 4 ]]; then
+elif [[ "$#" > 6 ]]; then
+    errorMsg
+fi
+if [[ "$#" -ge 2 ]]; then
+    if [[ "${1}" != "-i" && "${1}" != "-p" && "${1}" != "-e" ]]; then
+        errorMsg
+    fi
+fi
+if [[ "$#" -ge 4 ]]; then
     if [[ "${3}" != "-i" && "${3}" != "-p" && "${3}" != "-e" ]]; then
         errorMsg
     fi
-elif [[ "$#" == 6 ]]; then
+fi
+if [[ "$#" -ge 6 ]]; then
     if [[ "${5}" != "-i" && "${5}" != "-p" && "${5}" != "-e" ]]; then
         errorMsg
     fi
@@ -92,8 +99,6 @@ elif [[ "${1}" == "-p" ]]; then
     PAUSED="${2}"
 elif [[ "${1}" == "-e" ]]; then
     ERROR="${2}"
-elif [[ "${1}" == "-escape" ]]; then
-	ESCAPE=true
 fi
 if [[ "${3}" == "-i" ]]; then
     INFO="${4}"
@@ -101,8 +106,6 @@ elif [[ "${3}" == "-p" ]]; then
     PAUSED="${4}"
 elif [[ "${3}" == "-e" ]]; then
     ERROR="${4}"
-elif [[ "${3}" == "-escape" ]]; then
-	ESCAPE=true
 fi
 if [[ "${5}" == "-i" ]]; then
     INFO="${6}"
@@ -110,18 +113,11 @@ elif [[ "${5}" == "-p" ]]; then
     PAUSED="${6}"
 elif [[ "${5}" == "-e" ]]; then
     ERROR="${6}"
-elif [[ "${5}" == "-escape" ]]; then
-	ESCAPE=true
 fi
-if [[ "${7}" == "-i" ]]; then
-    INFO="${8}"
-elif [[ "${7}" == "-p" ]]; then
-    PAUSED="${8}"
-elif [[ "${7}" == "-e" ]]; then
-    ERROR="${8}"
-elif [[ "${7}" == "-escape" ]]; then
-	ESCAPE=true
+if [[ "${3}" == "--escape" || "${5}" == "--escape" || "${7}" == "--escape" ]]; then
+    ESCAPE=true
 fi
+
 
 # check if spotify is running
 status=`pidof spotify | wc -l`
