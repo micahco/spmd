@@ -21,17 +21,17 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 
 `"<info>"` can contain the following keywords:
 
-* %album
-* %artist
-* %disc
-* %title
-* %track
+* `%album`
+* `%artist`
+* `%disc`
+* `%title`
+* `%track`
 
-`"<error>"` Custom message when Spotify is closed.
+`"<error>"` custom message when Spotify is closed.
 
-`"<paused>"` Custom message when Spotify is paused.
+`"<paused>"` custom message when Spotify is paused.
 
-`--escape` Escapes special charecters in the `"<info>"` output.
+`--escape` outputs the `"<input>"` with the special characters escaped.
 
 NOTE: all the parameters are optional and order doesn't matter (--escape has to be at the end).
 
@@ -59,6 +59,15 @@ If Spotify is paused:
 ```
 $ spotify-now -p "paused"
 paused
+```
+
+With the `--escape` parameter:
+```
+$ spotify-now -i "%artist - %title"
+Oshi - I <3 U
+
+$ spotify-now -i "%artist - %title" --escape
+Oshi - I &lt;3 U
 ```
 
 
