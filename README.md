@@ -19,8 +19,6 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 
 `spotify-now -i "<info>" -p "<paused>" -e "<error>"`
 
-NOTE: all the parameters are optional and order doesn't matter (--escape has to be at the end).
-
 `"<info>"` can contain the following keywords:
 
 * %album
@@ -29,9 +27,13 @@ NOTE: all the parameters are optional and order doesn't matter (--escape has to 
 * %title
 * %track
 
-`"<error>"` is your custom message when Spotify is closed.
+`"<error>"`: Custom message when Spotify is closed.
 
-`"<paused>"` is your custom message when Spotify is paused.
+`"<paused>"`: Custom message when Spotify is paused.
+
+`--escape`: Escapes special charecters in the `"<info>"` output.
+
+NOTE: all the parameters are optional and order doesn't matter (--escape has to be at the end).
 
 **Example:**
 
