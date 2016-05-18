@@ -71,6 +71,6 @@ Oshi - I &lt;3 U
 ```
 
 
-## How Does it Work
+## How does it work?
 Spotify-Now works by send a dbus message to the Spotify player which then 
 returns information on the song currently playing. This data is then parsed using a combination of grep, tail, and cut commands.
