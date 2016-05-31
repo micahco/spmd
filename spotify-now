@@ -138,6 +138,8 @@ else
 		if [ "$ESCAPE" = true ]; then
 			INFO="${INFO//&/&amp;}"
 			INFO="${INFO//</&lt;}"
+			INFO="${INFO//>/&gt;}"	
+			INFO="${INFO//\"/&quot;}"
 			INFO="${INFO//\"/\\\"}"
 			INFO="${INFO//\\/\\\\}"
 		fi
