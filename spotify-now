@@ -140,7 +140,6 @@ else
 			INFO="${INFO//</&lt;}"
 			INFO="${INFO//>/&gt;}"	
 			INFO="${INFO//\"/&quot;}"
-			INFO="${INFO//\"/\\\"}"
 			INFO="${INFO//\\/\\\\}"
 		fi
 		echo $INFO
