@@ -138,7 +138,8 @@ else
 		if [ "$ESCAPE" = true ]; then
 			INFO="${INFO//&/&amp;}"
 			INFO="${INFO//</&lt;}"
-			INFO="${INFO//\"/\\\"}"
+			INFO="${INFO//>/&gt;}"	
+			INFO="${INFO//\"/&quot;}"
 			INFO="${INFO//\\/\\\\}"
 		fi
 		echo $INFO
