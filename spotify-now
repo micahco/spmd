@@ -10,7 +10,7 @@ album () {
     echo "$res"
 }
 artist () {
-    res=$(echo "$META" | grep -m 1 "xesam:albumArtist" -b2 | tail -n1)
+    res=$(echo "$META" | grep -m 1 "xesam:artist" -b2 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
     # if advertisement is playing
