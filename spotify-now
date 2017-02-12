@@ -13,7 +13,7 @@ artist () {
     res=$(echo "$META" | grep -m 1 "xesam:artist" -b2 | tail -n1)
     res="${res%\"*}"
     res="${res#*\"}"
-    # if advertisement is playing
+    # if advertisement is playing currently
     if [[ "$res" == "" ]]; then
         echo "Ad"
     else
