@@ -1,4 +1,4 @@
-# Spotify-Now
+# spotify-now
 
 A bash script that gives you information on the current Spotify song.
 
