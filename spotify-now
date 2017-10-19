@@ -68,7 +68,7 @@ elif [[ "$#" == 1 ]]; then
     else
         errorMsg
     fi
-elif [[ "$#" > 6 ]]; then
+elif [[ "$#" -gt 6 ]]; then
     errorMsg
 fi
 if [[ "$#" -ge 2 ]]; then
@@ -120,28 +120,28 @@ fi
 
 
 # check if spotify is running
-status=`pidof spotify | wc -l`
+status=$(pidof spotify | wc -l)
 if [[ "$status" != 1 && "$ERROR" != "" ]]; then
     echo "$ERROR"
 else
-	playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
-	if [[ "$playback" == "Paused" && "$PAUSED" != "" ]]; then
-		echo "$PAUSED"
-	elif [[ "$INFO" != "" ]]; then
-   		# get mpris2 dbus status of spotify player
-   		META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-   		INFO="${INFO//"%album"/$(album)}"
-   		INFO="${INFO//"%artist"/$(artist)}"
-   		INFO="${INFO//"%disc"/$(disc)}"
-   		INFO="${INFO//"%title"/$(title)}"
-   		INFO="${INFO//"%track"/$(track)}"
-		if [ "$ESCAPE" = true ]; then
-			INFO="${INFO//&/&amp;}"
-			INFO="${INFO//</&lt;}"
-			INFO="${INFO//>/&gt;}"	
-			INFO="${INFO//\"/&quot;}"
-			INFO="${INFO//\\/\\\\}"
-		fi
-		echo $INFO
-	fi
+    playback=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused)
+    if [[ "$playback" == "Paused" && "$PAUSED" != "" ]]; then
+        echo "$PAUSED"
+    elif [[ "$INFO" != "" ]]; then
+        # get mpris2 dbus status of spotify player
+        META=$(dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata')
+        INFO="${INFO//"%album"/$(album)}"
+        INFO="${INFO//"%artist"/$(artist)}"
+        INFO="${INFO//"%disc"/$(disc)}"
+        INFO="${INFO//"%title"/$(title)}"
+        INFO="${INFO//"%track"/$(track)}"
+        if [ "$ESCAPE" = true ]; then
+            INFO="${INFO//&/&amp;}"
+            INFO="${INFO//</&lt;}"
+            INFO="${INFO//>/&gt;}"
+            INFO="${INFO//\"/&quot;}"
+            INFO="${INFO//\\/\\\\}"
+        fi
+        echo "$INFO"
+    fi
 fi
