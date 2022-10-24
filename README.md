@@ -1,19 +1,6 @@
 # spotify-now
 
-A bash script that gives you information on the current Spotify song.
-
 ![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
-
-
-## Installation
-Simply copy the source script to your bash path.
-
-1. `git clone https://github.com/getmicah/spotify-now.git`
-2. `cd spotify-now`
-3. `sudo cp spotify-now /usr/bin`
-
-Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/packages/spotify-now-git) from the AUR.
-
 
 ## Usage
 
@@ -32,8 +19,6 @@ Arch Linux users can install [spotify-now-git](https://aur.archlinux.org/package
 `"<paused>"` custom message when Spotify is paused.
 
 `--escape` outputs the `"<input>"` with the special characters escaped.
-
-NOTE: all the parameters are optional and order doesn't matter (--escape has to be at the end).
 
 **Example:**
 
