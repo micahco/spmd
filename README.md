@@ -24,19 +24,19 @@
 
 ```
 $ spotify-now -i "%artist - %title"
-Kendrick Lamar - Alright
+Vince Guaraldi - Linus And Lucy
 ```
 
 ```
 $ spotify-now -p "paused" -e "stopped" -i "Album: %album"
-Album: To Pimp A Butterfly
+A Charlie Brown Christmas
 ```
 
 If Spotify is closed:
 
 ```
-$ spotify-now -e "Spotify is closed"
-Spotify is closed
+$ spotify-now -e "closed"
+closed
 ```
 
 If Spotify is paused:
@@ -48,14 +48,9 @@ paused
 
 With the `--escape` parameter:
 ```
-$ spotify-now -i "%artist - %title"
-Oshi - I <3 U
+$ spotify-now -i "%artist"
+Kenny Rogers & The First Edition
 
-$ spotify-now -i "%artist - %title" --escape
-Oshi - I &lt;3 U
+$ spotify-now -i "%artist" --escape
+Kenny Rogers &amp; The First Edition
 ```
-
-
-## How does it work?
-spotify-now sends a dbus message to the Spotify player which then 
-returns information on the song currently playing. This data is then parsed using a combination of grep, tail, and cut commands.
