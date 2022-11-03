@@ -1,7 +1,5 @@
 # spotify-now
 
-![scrot](https://raw.githubusercontent.com/getmicah/spotify-now/master/scrot.png)
-
 ## Usage
 
 `spotify-now -i "<info>" -p "<paused>" -s "<stopped>"`
