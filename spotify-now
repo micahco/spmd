@@ -1,109 +1,110 @@
 #!/bin/sh
 
+# metadata search functions
 album() {
-    res=$(echo "$META" | grep -m 1 "xesam:album" -b1 | tail -n1)
-    res="${res%\"*}"
-    res="${res#*\"}"
-    echo "$res"
+	res=$(echo "$metadata" | grep -m 1 "xesam:album" -b1 | tail -n1)
+	res="${res%\"*}"
+	res="${res#*\"}"
+	echo "$res"
 }
-
 artist() {
-    res=$(echo "$META" | grep -m 1 "xesam:artist" -b2 | tail -n1)
-    res="${res%\"*}"
-    res="${res#*\"}"
-    if [[ "$res" == "" ]]; then
-        echo "Ad"
-    else
-        echo "$res"
-    fi
-}
-
-disc() {
-    res=$(echo "$META" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
-    res="${res#*3}"
-    res="${res#*2}"
-    echo "$res"
-}
-
-title() {
-    res=$(echo "$META" | grep -m 1 "xesam:title" -b1 | tail -n1)
-    res="${res%\"*}"
-    res="${res#*\"}"
-    echo "$res"
-}
-
-track() {
-    res=$(echo "$META" | grep -m 1 "xesam:trackNumber" -b1 | tail -n1)
-    res="${res#*3}"
-    res="${res#*2}"
-    echo "$res"
-}
-
-errorMsg() {
-    echo "Error: invalid argument"
-    echo "help: https://github.com/getmicah/spotify-now"
-    exit 1
-}
-
-# help message
-helpMsg () {
-    echo "usage: spotify-now [-ipe]"
-    echo "help: https://github.com/micahco/spotify-now"
-    exit 1
-}
-
-if [[ $# -eq 0 ]]; then
-    helpMsg;
-    exit 1;
-fi
-
-
-# parse args
-INFO=""
-PAUSED=""
-ERROR=""
-ESCAPE=false
-while getopts i:p:e: flag
-do
-    case "${flag}" in
-        i) INFO=${OPTARG};;
-        p) PAUSED=${OPTARG};;
-        e) ERROR=${OPTARG};;
-	  ?) exit 1;
-    esac
-done
-if [[ $* == *--escape* ]]; then
-	ESCAPE=true
-	echo "ESC"
-fi
-
-pid=`pidof spotify | wc -l`
-if [[ "$pid" != 1 ]]; then
-	if [[ "$ERROR" != "" ]]; then
-    		echo "$ERROR"
+	res=$(echo "$metadata" | grep -m 1 "xesam:artist" -b2 | tail -n1)
+	res="${res%\"*}"
+	res="${res#*\"}"
+	if [ "$res" = "" ]; then
+		echo "Ad"
 	else
-		echo "pidof spotify: $pid"
+		echo "$res"
+	fi
+}
+title() {
+	res=$(echo "$metadata" | grep -m 1 "xesam:title" -b1 | tail -n1)
+	res="${res%\"*}"
+	res="${res#*\"}"
+	echo "$res"
+}
+discNumber() {
+	res=$(echo "$META" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
+	res="${res#*3}"
+	res="${res#*2}"
+	echo "$res"
+}
+trackNumber() {
+	res=$(echo "$metadata" | grep -m 1 "xesam:trackNumber" -b1 | tail -n1)
+	res="${res#*3}"
+	res="${res#*2}"
+	echo "$res"
+}
+
+usage () {
+	echo "usage: spotify-now [-ips]"
+	echo "help: https://github.com/micahco/spotify-now"
+	exit 1
+}
+
+# no arguments
+if [ $# -eq 0 ]
+then
+	usage
+fi
+
+# parse arguments
+optInfo=""
+optPaused=""
+optStopped=""
+while getopts i:p:s: flag
+do
+	case "$flag" in
+		i) optInfo=${OPTARG};;
+		p) optPaused=${OPTARG};;
+		s) optStopped=${OPTARG};;
+		?) usage;;
+	esac
+done
+
+# check if options were passed
+if [ "$OPTIND" -eq 1 ]
+then
+	echo "No options were passed"
+	usage
+fi
+shift $((OPTIND-1))
+if [ "$#" -ne 0 ]
+then
+	echo "Error: non-option argument: $1"
+	usage
+fi
+
+# check if spotify is running
+if [ $(pidof spotify | wc -l) -eq 0 ]
+then
+	if [ "$optStopped" != "" ]
+	then
+		echo "$optStopped"
 	fi
 else
-	playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
-	if [[ "$playback" == "Paused" && "$PAUSED" != "" ]]; then
-		echo "$PAUSED"
-	elif [[ "$INFO" != "" ]]; then
-   		META=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
-   		INFO="${INFO//"%album"/$(album)}"
-   		INFO="${INFO//"%artist"/$(artist)}"
-   		INFO="${INFO//"%disc"/$(disc)}"
-   		INFO="${INFO//"%title"/$(title)}"
-   		INFO="${INFO//"%track"/$(track)}"
-		if [ "$ESCAPE" = true ]; then
-			INFO="${INFO//&/&amp;}"
-			INFO="${INFO//</&lt;}"
-			INFO="${INFO//>/&gt;}"	
-			INFO="${INFO//\"/&quot;}"
-			INFO="${INFO//\\/\\\\}"
-		fi
-		echo $INFO
-	else
-		helpMsg
+	response=""
+	if [ "$optInfo" != "" ]
+	then
+		metadata=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
+		album=$(album)
+		artist=$(artist)
+		title=$(title)
+		discNumber=$(discNumber)
+		trackNumber=$(trackNumber)
+		response=$(echo "$optInfo" | sed -e 's/%album/'"$album"'/g' -e 's/%artist/'"$artist"'/g' -e 's/%title/'"$title"'/g' -e 's/%discNumber/'"$discNumber"'/g' -e 's/%trackNumber/'"$trackNumber"'/g')
 	fi
+	if [ "$optPaused" != "" ]
+	then
+		playback=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | grep -o Paused`
+		if [ "$playback" = "Paused" ]
+		then
+			response="$response $optPaused"
+		fi
+	fi
+	if [ "$response" != "" ]
+	then
+		echo "$response"
+	fi
+	exit 0
 fi

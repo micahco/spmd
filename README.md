@@ -4,21 +4,19 @@
 
 ## Usage
 
-`spotify-now -i "<info>" -p "<paused>" -e "<error>"`
+`spotify-now -i "<info>" -p "<paused>" -s "<stopped>"`
 
 `"<info>"` can contain the following keywords:
 
 * `%album`
 * `%artist`
-* `%disc`
 * `%title`
-* `%track`
-
-`"<error>"` custom message when Spotify is closed.
+* `%discNumber`
+* `%trackNumber`
 
 `"<paused>"` custom message when Spotify is paused.
 
-`--escape` outputs the `"<input>"` with the special characters escaped.
+`"<stopped>"` custom message when Spotify is not open.
 
 **Example:**
 
@@ -27,30 +25,16 @@ $ spotify-now -i "%artist - %title"
 Vince Guaraldi - Linus And Lucy
 ```
 
+If paused:
+
 ```
-$ spotify-now -p "paused" -e "stopped" -i "Album: %album"
-A Charlie Brown Christmas
+$ spotify-now -i "Album: %album" -p "(paused)"
+A Charlie Brown Christmas (paused)
 ```
 
 If Spotify is closed:
 
 ```
-$ spotify-now -e "closed"
+$ spotify-now -s "closed"
 closed
-```
-
-If Spotify is paused:
-
-```
-$ spotify-now -p "paused"
-paused
-```
-
-With the `--escape` parameter:
-```
-$ spotify-now -i "%artist"
-Kenny Rogers & The First Edition
-
-$ spotify-now -i "%artist" --escape
-Kenny Rogers &amp; The First Edition
 ```
