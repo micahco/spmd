@@ -37,8 +37,7 @@ trackNumber() {
 }
 
 usage () {
-	echo "usage: spotify-now [-ips]"
-	echo "help: https://github.com/micahco/spotify-now"
+	echo "usage: spmd [-P message] [-S message] 'metadata'"
 	exit 1
 }
 
@@ -49,31 +48,19 @@ then
 fi
 
 # parse arguments
-optInfo=""
 optPaused=""
 optStopped=""
-while getopts i:p:s: flag
+while getopts :P:S: flag
 do
 	case "$flag" in
-		i) optInfo=${OPTARG};;
-		p) optPaused=${OPTARG};;
-		s) optStopped=${OPTARG};;
-		?) usage;;
+		P) optPaused=${OPTARG};;
+		S) optStopped=${OPTARG};;
+		*) echo "spmd: invalid option -- '${OPTARG}'"; usage;;
 	esac
 done
-
-# check if options were passed
-if [ "$OPTIND" -eq 1 ]
-then
-	echo "No options were passed"
-	usage
-fi
 shift $((OPTIND-1))
-if [ "$#" -ne 0 ]
-then
-	echo "Error: non-option argument: $1"
-	usage
-fi
+
+optMetadata="$1"
 
 # check if spotify is running
 if [ $(pidof spotify | wc -l) -eq 0 ]
@@ -84,7 +71,7 @@ then
 	fi
 else
 	response=""
-	if [ "$optInfo" != "" ]
+	if [ "$optMetadata" != "" ]
 	then
 		metadata=`dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'`
 		album=$(album)
@@ -92,7 +79,7 @@ else
 		title=$(title)
 		discNumber=$(discNumber)
 		trackNumber=$(trackNumber)
-		response=$(echo "$optInfo" | sed -e 's/%album/'"$album"'/g' -e 's/%artist/'"$artist"'/g' -e 's/%title/'"$title"'/g' -e 's/%discNumber/'"$discNumber"'/g' -e 's/%trackNumber/'"$trackNumber"'/g')
+		response=$(echo "$optMetadata" | sed -e 's/%album/'"$album"'/g' -e 's/%artist/'"$artist"'/g' -e 's/%title/'"$title"'/g' -e 's/%discNumber/'"$discNumber"'/g' -e 's/%trackNumber/'"$trackNumber"'/g')
 	fi
 	if [ "$optPaused" != "" ]
 	then

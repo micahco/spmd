@@ -1,38 +1,30 @@
-# spotify-now
+# spmd
+
+A utility for displaying metadata about what's now playing in Spotify.
 
 ## Usage
 
-`spotify-now -i "<info>" -p "<paused>" -s "<stopped>"`
+`spmd [-P message] [-S message] 'metadata'`
 
-`"<info>"` can contain the following keywords:
-
-* `%album`
-* `%artist`
-* `%title`
-* `%discNumber`
-* `%trackNumber`
-
-`"<paused>"` custom message when Spotify is paused.
-
-`"<stopped>"` custom message when Spotify is not open.
+Valid metadata: `%album`, `%artist`, `%title`, `%discNumber`, `%trackNumber`
 
 **Example:**
 
 ```
-$ spotify-now -i "%artist - %title"
+$ spmd '%artist - %title'
 Vince Guaraldi - Linus And Lucy
 ```
 
 If paused:
 
 ```
-$ spotify-now -i "Album: %album" -p "(paused)"
-A Charlie Brown Christmas (paused)
+$ spmd -P '<paused>' '%album'
+A Charlie Brown Christmas <paused>
 ```
 
 If Spotify is closed:
 
 ```
-$ spotify-now -s "closed"
+$ spmd -S closed
 closed
 ```
