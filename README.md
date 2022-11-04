@@ -1,6 +1,6 @@
-# spmd
+# spmd — spotify metadata
 
-A utility for displaying metadata about what's now playing in Spotify.
+A utility for displaying metadata for the proprietary Spotify client.
 
 ## Usage
 
