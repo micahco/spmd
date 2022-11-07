@@ -1,14 +1,16 @@
 # spmd — spotify metadata
 
-A utility for displaying metadata for the proprietary Spotify client.
+Utility that pulls metadata from the proprietary Spotify client using the dbus interface.
+
+[man page](https://cowell.dev/projects/spmd.1.html)
 
 ## Usage
 
-`spmd [-P message] [-S message] 'metadata'`
+`spmd [-P message] [-S message] [metadata]`
 
-Valid metadata: `%album`, `%artist`, `%title`, `%discNumber`, `%trackNumber`
+Valid macros: `%album`, `%artist`, `%title`, `%discNumber`, `%trackNumber`
 
-**Example:**
+**EXAMPLES:**
 
 ```
 $ spmd '%artist - %title'

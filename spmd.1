@@ -12,7 +12,7 @@
 .Sh DESCRIPTION
 The
 .Nm
-utility displays metadata from the proprietary Spotify client.
+utility pulls metadata from the proprietary Spotify client using the dbus interface.
 .Pp
 The options are as follows:
 .Bl -tag -width Ds
@@ -25,9 +25,11 @@ Display
 .Ar message
 if Spotify is closed.
 .It Ar metadata
-Macros: %album, %artist, %title, %discNumber, %trackNumber.
+.Pp
+Valid macros:
+.Dl %album, %artist, %title, %discNumber, %trackNumber
 .El
-.Sh Examples
+.Sh EXAMPLES
 .Pp
 .Dl $ spmd '%artist - %title'
 .Dl Vince Guaraldi - Linus And Lucy
