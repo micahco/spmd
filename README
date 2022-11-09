@@ -1,0 +1,19 @@
+	spmd — spotify metadata
+
+	Utility that pulls metadata from the proprietary Spotify client using the dbus interface.
+
+USAGE
+
+	`spmd [-P message] [-S message] [metadata]`
+
+	Valid macros: `%album`, `%artist`, `%title`, `%discNumber`, `%trackNumber`
+
+EXAMPLES
+
+	$ spmd -P '<paused>' '%artist - %title'
+	Vince Guaraldi - Linus And Lucy
+
+	If paused:
+
+	$ spmd -P '<paused>' '%album'
+	A Charlie Brown Christmas <paused>
