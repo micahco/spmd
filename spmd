@@ -24,7 +24,7 @@ title() {
 	echo "$res"
 }
 discNumber() {
-	res=$(echo "$META" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
+	res=$(echo "$metadata" | grep -m 1 "xesam:discNumber" -b1 | tail -n1)
 	res="${res#*3}"
 	res="${res#*2}"
 	echo "$res"
